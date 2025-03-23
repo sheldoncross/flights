@@ -21,7 +21,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <WebCenter>
         <View>
-          
+          {/* ScrollView consisting of cards with sidebar for naviagation and initial elements */}
         </View>
       </WebCenter>
     </SafeAreaView>
