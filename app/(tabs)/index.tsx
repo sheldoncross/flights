@@ -1,5 +1,6 @@
-import { StyleSheet, Platform, SafeAreaView } from 'react-native';
-import { View } from 'react-native-reanimated/lib/typescript/Animated';
+import { StyleSheet, Platform, SafeAreaView, View } from 'react-native';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 function WebCenter({ children }: { children: React.ReactNode }) {
   if (Platform.OS !== 'web') {
@@ -21,7 +22,11 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <WebCenter>
         <View>
-          {/* ScrollView consisting of cards with sidebar for naviagation and initial elements */}
+            <Tabs value={0} aria-label="Tab Navigation">
+              <Tab label="Tab One" />
+              <Tab label="Tab Two" />
+              <Tab label="Tab Three" />
+            </Tabs>
         </View>
       </WebCenter>
     </SafeAreaView>
