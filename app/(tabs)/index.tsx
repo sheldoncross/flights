@@ -19,14 +19,24 @@ function WebCenter({ children }: { children: React.ReactNode }) {
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.container}>
-      <WebCenter>
-        <View>
-            <Tabs value={0} aria-label="Tab Navigation">
+    <SafeAreaView style={styles.sidebar}>
+          <View style={styles.sidebarTabs}>
+            <Tabs 
+              value={0} 
+              aria-label="Tab Navigation"
+              orientation="vertical"
+              indicatorColor="primary"
+              textColor="primary"
+              sx={{ borderRight: 1, borderColor: 'divider' }}
+            >
               <Tab label="Tab One" />
               <Tab label="Tab Two" />
               <Tab label="Tab Three" />
             </Tabs>
+        </View>      
+      <WebCenter>
+        <View style={styles.mainContent}>
+          <p>Main Content</p>
         </View>
       </WebCenter>
     </SafeAreaView>
@@ -43,5 +53,16 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     width: '100%', // Ensure it takes full width of parent
-  },  
+  },
+  sidebarTabs: {
+    width: 150, // Adjust width as needed
+  },
+  mainContent: {
+    flex: 1,
+    padding: 10
+  },
+  sidebar: {
+    flex: 1,
+    flexDirection: 'row'
+  }  
 });
