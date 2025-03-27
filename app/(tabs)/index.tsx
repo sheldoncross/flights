@@ -1,6 +1,7 @@
 import { StyleSheet, Platform, SafeAreaView, View } from 'react-native';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { Hidden } from '@mui/material';
 
 function WebCenter({ children }: { children: React.ReactNode }) {
   if (Platform.OS !== 'web') {
@@ -19,12 +20,28 @@ function WebCenter({ children }: { children: React.ReactNode }) {
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.sidebar}>
-          <View style={styles.sidebarTabs}>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <View style={styles.sidebar}>
+          <Tabs 
+            value={0} 
+            aria-label="Tab Navigation"
+            orientation="vertical"
+            indicatorColor="primary"
+            textColor="primary"
+            sx={{ borderRight: 1, borderColor: 'divider' }}
+          >
+            <Tab label="Tab One" />
+            <Tab label="Tab Two" />
+            <Tab label="Tab Three" />
+          </Tabs>
+        </View> 
+        <View style={styles.content}>
+          <WebCenter>
             <Tabs 
               value={0} 
               aria-label="Tab Navigation"
-              orientation="vertical"
+              orientation="horizontal"
               indicatorColor="primary"
               textColor="primary"
               sx={{ borderRight: 1, borderColor: 'divider' }}
@@ -33,36 +50,32 @@ export default function HomeScreen() {
               <Tab label="Tab Two" />
               <Tab label="Tab Three" />
             </Tabs>
-        </View>      
-      <WebCenter>
-        <View style={styles.mainContent}>
-          <p>Main Content</p>
+            <View>
+              {/* Insert cards here */}
+            </View>
+          </WebCenter>
         </View>
-      </WebCenter>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   webCenter: {
-    maxWidth: 600, // Or whatever width you need
+    maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
-    width: '100%', // Ensure it takes full width of parent
+    width: '100%',
   },
-  sidebarTabs: {
-    width: 150, // Adjust width as needed
-  },
-  mainContent: {
-    flex: 1,
-    padding: 10
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   sidebar: {
-    flex: 1,
-    flexDirection: 'row'
-  }  
+    width: 150
+  },
+  content: { 
+    flexBasis: '90%',
+    marginTop: 10
+  }
 });
