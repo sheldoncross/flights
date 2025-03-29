@@ -4,6 +4,7 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 
 function WebCenter({ children }: { children: React.ReactNode }) {
   if (Platform.OS !== 'web') {
@@ -60,6 +61,17 @@ export default function HomeScreen() {
               <Tab label="Tab Two" />
               <Tab label="Tab Three" />
             </Tabs>
+            <View style={styles.chatboxContainer}>
+              <Typography variant="body2" sx={{ paddingX: 2, marginBottom: 2, color: 'text.secondary' }}>
+                Plan your next trip or explore a new area!
+              </Typography>
+              <TextField
+                label="Your message"
+                variant="outlined"
+                fullWidth
+                sx={{ marginX: 2, marginBottom: 2 }}
+              />
+            </View>
             <ScrollView style={styles.scrollViewContainer} >
               <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 1</Typography></CardContent></Card>
               <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 2</Typography></CardContent></Card>
@@ -110,4 +122,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
+  chatboxContainer: {
+    paddingTop: 25,
+    paddingBottom: 15,
+    paddingRight: 30
+  }
 });
