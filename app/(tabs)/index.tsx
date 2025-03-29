@@ -36,7 +36,6 @@ export default function HomeScreen() {
               orientation="vertical"
               indicatorColor="primary"
               textColor="primary"
-              sx={{ borderRight: 1, borderColor: 'divider' }}
             >
               <Tab label="Tab One" />
               <Tab label="Tab Two" />
@@ -49,18 +48,19 @@ export default function HomeScreen() {
             <Typography variant="h4" component="h1" gutterBottom sx={{ paddingX: 2, paddingTop: 0, textAlign: 'center' }}>
               Flights
             </Typography>
-            <Tabs 
-              value={0} 
-              aria-label="Tab Navigation"
-              orientation="horizontal"
-              indicatorColor="primary"
-              textColor="primary"
-              sx={{ borderRight: 1, borderColor: 'divider' }}
-            >
-              <Tab label="Tab One" />
-              <Tab label="Tab Two" />
-              <Tab label="Tab Three" />
-            </Tabs>
+            <View style={styles.contentTabs}>
+              <Tabs 
+                value={0} 
+                aria-label="Tab Navigation"
+                orientation="horizontal"
+                indicatorColor="primary"
+                textColor="primary"
+              >
+                <Tab label="Tab One" />
+                <Tab label="Tab Two" />
+                <Tab label="Tab Three" />
+              </Tabs>
+            </View>
             <View style={styles.chatboxContainer}>
               <Typography variant="body2" sx={{ paddingX: 2, marginBottom: 2, color: 'text.secondary' }}>
                 Plan your next trip or explore a new area!
@@ -96,6 +96,11 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
+  },
+  contentTabs: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
   leftColumn: {
     width: 150,
