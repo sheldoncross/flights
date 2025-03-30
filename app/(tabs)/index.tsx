@@ -1,10 +1,28 @@
-import { StyleSheet, Platform, SafeAreaView, View, ScrollView, Text } from 'react-native';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
+import { StyleSheet, Platform, SafeAreaView, View, ScrollView, Text, ViewStyle, TextStyle } from 'react-native';
+import React from 'react';
+
+// Conditionally import MUI components only for web
+const MUIComponents = Platform.OS === 'web' 
+  ? {
+    Tabs: require('@mui/material/Tabs').default,
+    Tab: require('@mui/material/Tab').default,
+    Card: require('@mui/material/Card').default,
+    CardContent: require('@mui/material/CardContent').default,
+    Typography: require('@mui/material/Typography').default,
+    TextField: require('@mui/material/TextField').default,
+  } 
+  : {
+    Tabs: () => null,
+    Tab: () => null,
+    Card: () => null,
+    CardContent: () => null,
+    Typography: () => null,
+    TextField: () => null,
+  };
+
+// Use the conditionally imported components
+const { Tabs, Tab, Card, CardContent, Typography, TextField } = MUIComponents;
+
 
 function WebCenter({ children }: { children: React.ReactNode }) {
   if (Platform.OS !== 'web') {
@@ -30,29 +48,11 @@ export default function HomeScreen() {
             <Text style={styles.emoji}>✈️</Text>
           </View>
           <View style={styles.sidebar}>
-            <Tabs 
-              value={0} 
-              aria-label="Tab Navigation"
-              orientation="vertical"
-              indicatorColor="primary"
-              textColor="primary"
-            >
-              <Tab label="Tab One" />
-              <Tab label="Tab Two" />
-              <Tab label="Tab Three" />
-            </Tabs>
-          </View>
-        </View>
-        <View style={styles.content}>
-          <WebCenter>
-            <Typography variant="h4" component="h1" gutterBottom sx={{ paddingX: 2, paddingTop: 0, textAlign: 'center' }}>
-              Flights
-            </Typography>
-            <View style={styles.contentTabs}>
+            {Platform.OS === 'web' && (
               <Tabs 
                 value={0} 
                 aria-label="Tab Navigation"
-                orientation="horizontal"
+                orientation="vertical"
                 indicatorColor="primary"
                 textColor="primary"
               >
@@ -60,24 +60,78 @@ export default function HomeScreen() {
                 <Tab label="Tab Two" />
                 <Tab label="Tab Three" />
               </Tabs>
-            </View>
-            <View style={styles.chatboxContainer}>
-              <Typography variant="body2" sx={{ paddingX: 2, marginBottom: 2, color: 'text.secondary' }}>
-                Plan your next trip or explore a new area!
+            )}
+          </View>
+        </View>
+        <View style={styles.content}>
+          <WebCenter>
+            {Platform.OS === 'web' && (
+              <Typography variant="h4" component="h1" gutterBottom sx={{ paddingX: 2, paddingTop: 0, textAlign: 'center' }}>
+                Flights
               </Typography>
-              <TextField
-                label="Your message"
-                variant="outlined"
-                fullWidth
-                sx={{ marginX: 2, marginBottom: 2 }}
-              />
+            )}
+            {Platform.OS !== 'web' && (
+              <Text style={{ fontSize: 24, textAlign: 'center', marginVertical: 10 }}>
+                Flights
+              </Text>
+            )}
+            <View style={styles.contentTabs}>
+              {Platform.OS === 'web' && (
+                <Tabs 
+                  value={0} 
+                  aria-label="Tab Navigation"
+                  orientation="horizontal"
+                  indicatorColor="primary"
+                  textColor="primary"
+                >
+                  <Tab label="Tab One" />
+                  <Tab label="Tab Two" />
+                  <Tab label="Tab Three" />
+                </Tabs>
+              )}
             </View>
-            <ScrollView style={styles.scrollViewContainer} >
-              <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 1</Typography></CardContent></Card>
-              <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 2</Typography></CardContent></Card>
-              <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 3</Typography></CardContent></Card>
-              <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 4</Typography></CardContent></Card>
-              <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 5</Typography></CardContent></Card>
+            <View>
+              <ScrollView style={styles.messagesScrollView}>
+                <View style={[styles.messageContainer, styles.userMessage]}>
+                  <Text>Hi there!</Text>
+                </View>
+                <View style={[styles.messageContainer, styles.botMessage]}>
+                  <Text>Hello! How can I help you plan your trip today?</Text>
+                </View>
+                <View style={[styles.messageContainer, styles.userMessage]}>
+                  <Text>I'm thinking of going to Hawaii.</Text>
+                </View>
+                <View style={[styles.messageContainer, styles.botMessage]}>
+                  <Text>Great choice! Which island are you interested in?</Text>
+                </View>
+              </ScrollView>
+              {Platform.OS === 'web' && (
+                <TextField
+                  label="Your message"
+                  variant="outlined"
+                  sx={{ marginX: 2, marginTop: 2 }}
+                />
+              )}
+            </View>
+            <ScrollView style={styles.scrollViewContainer}>
+              {Platform.OS === 'web' && (
+                <>
+                  <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 1</Typography></CardContent></Card>
+                  <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 2</Typography></CardContent></Card>
+                  <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 3</Typography></CardContent></Card>
+                  <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 4</Typography></CardContent></Card>
+                  <Card sx={{ marginY: 1, marginX: 2 }}><CardContent><Typography>Card 5</Typography></CardContent></Card>
+                </>
+              )}
+              {Platform.OS !== 'web' && (
+                <>
+                  <View style={styles.cardStyle}><Text>Card 1</Text></View>
+                  <View style={styles.cardStyle}><Text>Card 2</Text></View>
+                  <View style={styles.cardStyle}><Text>Card 3</Text></View>
+                  <View style={styles.cardStyle}><Text>Card 4</Text></View>
+                  <View style={styles.cardStyle}><Text>Card 5</Text></View>
+                </>
+              )}
             </ScrollView>
           </WebCenter>
         </View>
@@ -86,6 +140,7 @@ export default function HomeScreen() {
   );
 }
 
+// Create properly typed styles
 const styles = StyleSheet.create({
   webCenter: {
     maxWidth: 600,
@@ -98,6 +153,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentTabs: {
+    display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -122,14 +179,43 @@ const styles = StyleSheet.create({
   content: {
     flexBasis: '90%',
     flex: 1,
+    flexDirection: 'column',
+    height: Platform.OS === 'web' ? '100vh' as any : '100%',
   },
   scrollViewContainer: {
     flex: 1,
     width: '100%',
   },
-  chatboxContainer: {
-    paddingTop: 25,
-    paddingBottom: 15,
-    paddingRight: 30
-  }
+  messagesScrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  messageContainer: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 15,
+    marginBottom: 8,
+    maxWidth: '80%',
+  },
+  userMessage: {
+    backgroundColor: '#DCF8C6',
+    alignSelf: 'flex-end',
+    borderBottomRightRadius: 0,
+  },
+  botMessage: {
+    backgroundColor: '#E5E5EA',
+    alignSelf: 'flex-start',
+    borderBottomLeftRadius: 0,
+  },
+  cardStyle: {
+    margin: 8,
+    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
 });
