@@ -1,10 +1,9 @@
 import * as SQLite from 'expo-sqlite';
 
-
 const initializeDatabase = async() => {
-    const db = await SQLite.openDatabaseAsync('cityItinerary.db');
+  const db = await SQLite.openDatabaseAsync('cityItinerary.db');
 
-    await db.execAsync(`
+  await db.execAsync(`
         PRAGMA journal_mode = WAL;
 
         CREATE TABLE IF NOT EXISTS cities (
@@ -36,10 +35,19 @@ const initializeDatabase = async() => {
             notes TEXT,
             FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE CASCADE
         );
+
+        CREATE TABLE IF NOT EXISTS user_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            message TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            is_from_user BOOLEAN NOT NULL DEFAULT 1
+        );
     `);
 
-    console.log("Database initialized successfully");
+  console.log("Database initialized successfully");
 
-    return db;
+  return db;
 }
+
+export { initializeDatabase }
 

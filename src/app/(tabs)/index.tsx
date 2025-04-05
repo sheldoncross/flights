@@ -1,5 +1,8 @@
 import { StyleSheet, Platform, SafeAreaView, View, ScrollView, Text, ViewStyle, TextStyle } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { initializeDatabase } from '../../backend/database';
+import { addUserMessage } from '../../backend/database/operations';
+import { SQLiteDatabase } from 'expo-sqlite';
 
 // Conditionally import MUI components only for web
 const MUIComponents = Platform.OS === 'web' 
@@ -23,7 +26,6 @@ const MUIComponents = Platform.OS === 'web'
 // Use the conditionally imported components
 const { Tabs, Tab, Card, CardContent, Typography, TextField } = MUIComponents;
 
-
 function WebCenter({ children }: { children: React.ReactNode }) {
   if (Platform.OS !== 'web') {
     return (
@@ -40,6 +42,31 @@ function WebCenter({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomeScreen() {
+  const [database, setDatabase] = useState<SQLiteDatabase | null>(null);
+  
+  useEffect(() => {
+    const initDb = async () => {
+      const db = await initializeDatabase();
+      // setDatabase(db);
+    };
+    initDb();
+  }, []);
+
+  // 1. Add state for the input field
+  const [inputValue, setInputValue] = useState('');
+
+  // 3. Define the submission handler function
+  const handleSendMessage = async () => {
+    if (!inputValue.trim()) return; // Don't send empty messages
+    if (!database) return; // Don't send if database isn't initialized
+
+    console.log("Sending message:", inputValue);
+
+    // addUserMessage(database, inputValue, true)
+
+    setInputValue('');
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -110,6 +137,18 @@ export default function HomeScreen() {
                   label="Your message"
                   variant="outlined"
                   sx={{ marginX: 2, marginTop: 2 }}
+                  value={inputValue}
+                  onChange={(
+                    e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                  ) => setInputValue(e.target.value)}
+                  onKeyPress={(
+                    e : React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+                  ) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
                 />
               )}
             </View>
@@ -212,10 +251,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#fff',
     borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
     elevation: 2,
   },
 });
