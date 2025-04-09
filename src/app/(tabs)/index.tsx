@@ -1,8 +1,9 @@
 import { StyleSheet, Platform, SafeAreaView, View, ScrollView, Text, ViewStyle, TextStyle } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { initializeDatabase } from '../../backend/database';
 import { addUserMessage } from '../../backend/database/operations';
 import { SQLiteDatabase } from 'expo-sqlite';
+import { Database } from '../../backend/database';
 
 // Conditionally import MUI components only for web
 const MUIComponents = Platform.OS === 'web' 
@@ -42,14 +43,36 @@ function WebCenter({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomeScreen() {
-  const [database, setDatabase] = useState<SQLiteDatabase | null>(null);
+  const [database, setDatabase] = useState<Database | null>(null);
+  const isMountedRef = useRef(true);
   
   useEffect(() => {
     const initDb = async () => {
-      const db = await initializeDatabase();
-      // setDatabase(db);
+      try {
+        console.log("Attempting to initialize database...");
+        const db = await initializeDatabase();
+        console.log("Database promise resolved.");
+        if (isMountedRef.current) {
+          setDatabase(db);
+          console.log("Database initialized and set in state (component mounted).");
+        } else {
+          console.log("Database initialized but component unmounted, skipping state update.");
+        }
+      } catch (error) {
+        if (isMountedRef.current) {
+          console.error("Error initializing database while component mounted:", error);
+        } else {
+          console.error("Error initializing database after component unmounted:", error);
+        }
+      }
     };
+
     initDb();
+
+    return () => {
+      console.log("HomeScreen unmounting, setting isMountedRef to false.");
+      isMountedRef.current = false;
+    };
   }, []);
 
   // 1. Add state for the input field
@@ -62,7 +85,7 @@ export default function HomeScreen() {
 
     console.log("Sending message:", inputValue);
 
-    // addUserMessage(database, inputValue, true)
+    addUserMessage(database, inputValue, true)
 
     setInputValue('');
   };

@@ -1,21 +1,34 @@
-import { openDatabaseAsync, SQLiteDatabase } from 'expo-sqlite';
+import { Connection } from 'mysql2/promise';
 
-// Assuming db is initialized and accessible, or passed as an argument
-// You'll need to manage how the db connection is accessed by these functions
-async function addDestination(cityId: number, name: string, description: string) {
-  const db = await openDatabaseAsync('cityItinerary.db'); // Or get the existing connection
-  await db.runAsync(
-    'INSERT INTO destinations (city_id, name, description) VALUES (?, ?, ?)',
-    [cityId, name, description]
-  );
-  console.log(`Added destination: ${name}`);
+// Function to add a new destination
+async function addDestination(
+  connection: Connection,
+  cityId: number,
+  name: string,
+  description: string
+) {
+  try {
+    await connection.execute(
+      'INSERT INTO destinations (city_id, name, description) VALUES (?, ?, ?)',
+      [cityId, name, description]
+    );
+    console.log(`Added destination: ${name}`);
+  } catch (error) {
+    console.error('Error adding destination:', error);
+    throw error;
+  }
 }
 
-async function addUserMessage(db: SQLiteDatabase, message: string, isFromUser: boolean = true) {
+// Function to add a user message
+async function addUserMessage(
+  connection: Connection,
+  message: string,
+  isFromUser: boolean = true
+) {
   try {
-    await db.runAsync(
+    await connection.execute(
       'INSERT INTO user_messages (message, is_from_user) VALUES (?, ?)',
-      [message, isFromUser ? 1 : 0]
+      [message, isFromUser]
     );
     console.log(`Inserted user message: ${message}`);
   } catch (error) {
